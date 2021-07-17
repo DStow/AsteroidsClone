@@ -58,7 +58,7 @@ namespace Asteroids
             _player.DrawPlayer(_spriteBatch);
 
             // Write out hte player velocity for debugging
-            _spriteBatch.DrawString(MediumFont, _player.Velocity.ToString(), new Vector2(25, 25), Color.MonoGameOrange);
+            _spriteBatch.DrawString(MediumFont, "Velocity: " + _player.Velocity.ToString() + "\nRotation: " + _player.Rotation.ToString("N2"), new Vector2(25, 25), Color.MonoGameOrange);
 
             base.Draw(gameTime);
             _spriteBatch.End();
