@@ -12,18 +12,24 @@ namespace Asteroids
 
         public static SpriteFont MediumFont;
 
+        public const int SCREEN_WIDTH = 600;
+        public const int SCREEN_HEIGHT = 600;
+
         public AsteroidsGame()
         {
             _graphics = new GraphicsDeviceManager(this);
+
+
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-            _graphics.PreferredBackBufferWidth = 600;
-            _graphics.PreferredBackBufferHeight = 600;
         }
 
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            _graphics.PreferredBackBufferWidth = SCREEN_WIDTH;
+            _graphics.PreferredBackBufferHeight = SCREEN_HEIGHT;
+            _graphics.ApplyChanges();
             _player = new Player();
 
             base.Initialize();
