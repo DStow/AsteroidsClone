@@ -14,7 +14,7 @@ namespace Asteroids
         public Vector2 Velocity { get; private set; } = new Vector2(0, 0);
 
         private const float ROTATE_SPEED = 8f;
-        private const float MAX_SPEED = 400f;
+        private const float MAX_SPEED = 200f;
         private const float SPEED_DECAY = 20f;
         private const float ACCELERATION = 200f;
         private const float DEACCELERATION = 220f;
@@ -131,6 +131,13 @@ namespace Asteroids
         public void DrawPlayer(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(Sprite, Position, null, Color.White, Rotation, new Vector2(Size.X / 2, Size.Y / 2), 1f, SpriteEffects.None, 1f);
+        }
+    
+        public Vector2 GetNormalizedDirection()
+        {
+            Vector2 result = new Vector2(Velocity.X, Velocity.Y);
+            result.Normalize();
+            return result;
         }
     }
 }
