@@ -13,10 +13,12 @@ namespace Asteroids
         private Player _player;
         private Texture2D _laserSprite;
         private Texture2D _playerSprite;
+        private Texture2D _blackdropSprite;
         private List<Laser> _lasers;
         private AsteroidManager _asteroidManager;
 
         public static SpriteFont MediumFont;
+        public static SpriteFont LargeFont;
 
         public const int SCREEN_WIDTH = 600;
         public const int SCREEN_HEIGHT = 600;
@@ -30,10 +32,12 @@ namespace Asteroids
         public static int Lives = 5;
         private const float LOST_LIFE_INVICINIBILITY_TIME = 1f;
         private float _timeSinceLostLife = 0f;
+        private int _highestScore = 0;
 
         public AsteroidsGame()
         {
             _graphics = new GraphicsDeviceManager(this);
+
 
 
             Content.RootDirectory = "Content";
@@ -46,6 +50,7 @@ namespace Asteroids
             _graphics.PreferredBackBufferWidth = SCREEN_WIDTH;
             _graphics.PreferredBackBufferHeight = SCREEN_HEIGHT;
             _graphics.ApplyChanges();
+
 
             _player = new Player();
             _lasers = new List<Laser>();
@@ -60,6 +65,7 @@ namespace Asteroids
 
             // TODO: use this.Content to load your game content here
             MediumFont = Content.Load<SpriteFont>("fontmedium");
+            LargeFont = Content.Load<SpriteFont>("fontlarge");
             _playerSprite = Content.Load<Texture2D>("playership");
             _player.Sprite = _playerSprite;
             _laserSprite = Content.Load<Texture2D>("laser");
@@ -67,6 +73,7 @@ namespace Asteroids
             AsteroidSprites.LargeAsteroidSprite = Content.Load<Texture2D>("asteroidlarge");
             AsteroidSprites.MediumAsteroidSprite = Content.Load<Texture2D>("asteroidmedium");
             AsteroidSprites.SmallAsteroidSprite = Content.Load<Texture2D>("asteroidsmall");
+            _blackdropSprite = Content.Load<Texture2D>("backdrop");
         }
 
         protected override void Update(GameTime gameTime)
@@ -75,53 +82,59 @@ namespace Asteroids
                 Exit();
 
             // TODO: Add your update logic here
-            _timeSinceLastLaserFire += (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            _player.UpdatePlayer(gameTime);
-            _timeSinceLostLife += (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            KeyboardState keyboardState = Keyboard.GetState();
-            if (keyboardState.IsKeyDown(Keys.Space) && _spaceDown == false)
+            if (Lives > 0)
             {
-                _spaceDown = true;
-                AttemptToFireLaser(gameTime);
-            }
-            else if (keyboardState.IsKeyDown(Keys.Space) == false)
-            {
-                _spaceDown = false;
-            }
+                _timeSinceLastLaserFire += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            for (int i = _lasers.Count - 1; i >= 0; i--)
-            {
-                _lasers[i].UpdateLaser(gameTime);
+                _player.UpdatePlayer(gameTime);
+                _timeSinceLostLife += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-                if (_lasers[i].Lifespan > LASER_LIFETIME)
-                    _lasers.RemoveAt(i);
-            }
-
-            // Loop through Asteroids and check for player collision...
-            if (_timeSinceLostLife > LOST_LIFE_INVICINIBILITY_TIME)
-            {
-                for (int asteroidIndex = _asteroidManager.Asteroids.Count - 1; asteroidIndex >= 0; asteroidIndex--)
+                KeyboardState keyboardState = Keyboard.GetState();
+                if (keyboardState.IsKeyDown(Keys.Space) && _spaceDown == false)
                 {
-                    var asteroid = _asteroidManager.Asteroids[asteroidIndex];
-                    if (CollisionHelper.CheckBasicCollision(_player.Position, _player.Size, asteroid.Position, asteroid.Size))
+                    _spaceDown = true;
+                    AttemptToFireLaser(gameTime);
+                }
+                else if (keyboardState.IsKeyDown(Keys.Space) == false)
+                {
+                    _spaceDown = false;
+                }
+
+                for (int i = _lasers.Count - 1; i >= 0; i--)
+                {
+                    _lasers[i].UpdateLaser(gameTime);
+
+                    if (_lasers[i].Lifespan > LASER_LIFETIME)
+                        _lasers.RemoveAt(i);
+                }
+
+                // Loop through Asteroids and check for player collision...
+                if (_timeSinceLostLife > LOST_LIFE_INVICINIBILITY_TIME)
+                {
+                    for (int asteroidIndex = _asteroidManager.Asteroids.Count - 1; asteroidIndex >= 0; asteroidIndex--)
                     {
-                        Lives--;
-                        _timeSinceLostLife = 0;
+                        var asteroid = _asteroidManager.Asteroids[asteroidIndex];
+                        if (CollisionHelper.CheckBasicCollision(_player.Position, _player.Size, asteroid.Position, asteroid.Size))
+                        {
+                            Lives--;
+                            _timeSinceLostLife = 0;
 
-                        if (!(asteroid is SmallAsteroid))
-                            _asteroidManager.PopAsteroid(asteroid);
+                            if (!(asteroid is SmallAsteroid))
+                                _asteroidManager.PopAsteroid(asteroid);
 
-                        _asteroidManager.Asteroids.RemoveAt(asteroidIndex);
+                            _asteroidManager.Asteroids.RemoveAt(asteroidIndex);
 
-                        break;
+                            break;
+                        }
                     }
                 }
+
+                _asteroidManager.UpdateAsteroids(gameTime, _lasers);
             }
-
-            _asteroidManager.UpdateAsteroids(gameTime, _lasers);
-
+            else
+            {
+                // Don't update game objects are we are on teh score screen?
+            }
             base.Update(gameTime);
         }
 
@@ -149,16 +162,13 @@ namespace Asteroids
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
 
-            _spriteBatch.DrawString(MediumFont, "Score: " + Score.ToString(), new Vector2(25, 25), Color.MonoGameOrange);
+
 
             // Draw lives
             for (int i = Lives - 1; i >= 0; i--)
             {
                 _spriteBatch.Draw(_playerSprite, new Vector2(SCREEN_WIDTH - ((25 - 5) * (i + 1)), 25), null, Color.White, (float)(System.Math.PI / 2) * 3, Vector2.Zero, 0.65f, SpriteEffects.None, 0f);
             }
-
-
-
 
             foreach (var laser in _lasers)
             {
@@ -168,6 +178,23 @@ namespace Asteroids
             _asteroidManager.DrawAsteroids(_spriteBatch);
 
             _player.DrawPlayer(_spriteBatch);
+
+            if (Lives == 0)
+            {
+                //Backdrop box
+                //_spriteBatch.Draw(_blackdropSprite, new Rectangle(25, 60, SCREEN_WIDTH - 50, SCREEN_HEIGHT - 85), Color.White);
+
+                string scoreText = "GAMEOVER\nFinal Score: " + Score;
+                var textMeasurement = LargeFont.MeasureString(scoreText);
+
+                _spriteBatch.DrawString(LargeFont, scoreText, new Vector2((SCREEN_WIDTH / 2) - (textMeasurement.X / 2), 200), Color.Yellow);
+            }
+            else
+            {
+                _spriteBatch.DrawString(MediumFont, "Score: " + Score.ToString(), new Vector2(25, 25), Color.MonoGameOrange);
+            }
+
+
 
             base.Draw(gameTime);
             _spriteBatch.End();
