@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace Asteroids
 {
@@ -12,8 +13,8 @@ namespace Asteroids
         public Vector2 Position { get; private set; } = new Vector2(25, 25);
         public Vector2 Velocity { get; private set; } = new Vector2(0, 0);
 
-        private const float ROTATE_SPEED = 8;
-        private const float MAX_SPEED = 20;
+        private const float ROTATE_SPEED = 8f;
+        private const float MAX_SPEED = 400f;
         private const float SPEED_DECAY = 20f;
         private const float ACCELERATION = 200f;
         private const float DEACCELERATION = 220f;
@@ -50,8 +51,12 @@ namespace Asteroids
                 // Get velocity figures?
                 float xVel = Velocity.X, yVel = Velocity.Y;
 
-                xVel += (float)System.Math.Cos(Rotation) * ACCELERATION * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                yVel += (float)System.Math.Sin(Rotation) * ACCELERATION * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                xVel += (float)Math.Cos(Rotation) * ACCELERATION * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                yVel += (float)Math.Sin(Rotation) * ACCELERATION * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                // Clamp the speeds down
+                xVel = Math.Clamp(xVel, MAX_SPEED * -1, MAX_SPEED);
+                yVel = Math.Clamp(yVel, MAX_SPEED * -1, MAX_SPEED);
 
                 Velocity = new Vector2(xVel, yVel);
             }
@@ -65,10 +70,10 @@ namespace Asteroids
                 // Use the player Dir as a way to fraction out how much deaccelleration to apply
 
                 // X Axis Decceleration
-                if (System.Math.Abs(xVel) > 0)
+                if (Math.Abs(xVel) > 0)
                 {
                     float xDeaccelAmount = playerDir.X * DEACCELERATION * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                    if(System.Math.Abs(xDeaccelAmount) > System.Math.Abs(xVel))
+                    if (Math.Abs(xDeaccelAmount) > Math.Abs(xVel))
                     {
                         xVel = 0;
                     }
@@ -79,10 +84,10 @@ namespace Asteroids
                 }
 
                 // Y Axis Decceleration
-                if (System.Math.Abs(yVel) > 0)
+                if (Math.Abs(yVel) > 0)
                 {
                     float yDeaccelAmount = playerDir.Y * DEACCELERATION * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                    if(System.Math.Abs(yDeaccelAmount) > System.Math.Abs(yVel))
+                    if (Math.Abs(yDeaccelAmount) > Math.Abs(yVel))
                     {
                         yVel = 0;
                     }
