@@ -17,7 +17,7 @@ namespace Asteroids
         private const float MAX_SPEED = 200f;
         private const float SPEED_DECAY = 20f;
         private const float ACCELERATION = 200f;
-        private const float DEACCELERATION = 220f;
+        private const float DEACCELERATION = 170f;
 
         public void UpdatePlayer(GameTime gameTime)
         {
@@ -103,7 +103,7 @@ namespace Asteroids
 
         private void UpdatePlayerPosition(GameTime gameTime, KeyboardState keyboardState)
         {
-            
+            Position = MovementHelper.MoveObjectInVelocityWithScreenWrap(gameTime, Position, Velocity, Size);
         }
 
         public void DrawPlayer(SpriteBatch spriteBatch)

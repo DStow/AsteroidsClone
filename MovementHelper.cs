@@ -10,10 +10,10 @@ namespace Asteroids
         public static Vector2 MoveObjectInDirectionWithScreenWrap(GameTime gameTime, Vector2 position, Vector2 direction, Vector2 size, float speed)
         {
             var velocity = new Vector2(direction.X * speed, direction.Y * speed);
-            return MoveObjectInVelocityWithScreenWrap(gameTime, position, velocity, size, speed);
+            return MoveObjectInVelocityWithScreenWrap(gameTime, position, velocity, size);
         }
 
-        public static Vector2 MoveObjectInVelocityWithScreenWrap(GameTime gameTime, Vector2 position, Vector2 velocity, Vector2 size, float speed)
+        public static Vector2 MoveObjectInVelocityWithScreenWrap(GameTime gameTime, Vector2 position, Vector2 velocity, Vector2 size)
         {
             float xPos = position.X, yPos = position.Y;
             xPos += velocity.X * (float)gameTime.ElapsedGameTime.TotalSeconds;
