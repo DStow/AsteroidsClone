@@ -38,6 +38,29 @@ namespace Asteroids.Asteroids
         private void HandleLaserCollisions(List<Laser> lasers)
         {
             // ToDo: Implement somehow...
+            for (int laserIndex = lasers.Count - 1; laserIndex >= 0; laserIndex--)
+            {
+                var laser = lasers[laserIndex];
+                for (int asteroidIndex = _asteroids.Count - 1; asteroidIndex >= 0; asteroidIndex--)
+                {
+                    var asteroid = _asteroids[asteroidIndex];
+                    if (CollisionHelper.CheckBasicCollision(laser.Position, laser.Size, asteroid.Position, asteroid.Size))
+                    {
+                        if (asteroid is SmallAsteroid)
+                        {
+                            _asteroids.RemoveAt(asteroidIndex);
+                        }
+                        else
+                        {
+                            PopAsteroid(asteroid);
+                            _asteroids.RemoveAt(asteroidIndex);
+                        }
+
+                        lasers.RemoveAt(laserIndex);
+                        break;
+                    }
+                }
+            }
         }
 
         private void SpawnAsteroidWave()
@@ -58,6 +81,36 @@ namespace Asteroids.Asteroids
 
                 _asteroids.Add(newAsteroid);
             }
+        }
+
+        private void PopAsteroid(AsteroidBase parentAsteroid)
+        {
+            AsteroidBase babyAsteroid1, babyAsteroid2;
+
+            if (parentAsteroid is LargeAsteroid)
+            {
+                babyAsteroid1 = new MediumAsteroid();
+                babyAsteroid2 = new MediumAsteroid();
+            }
+            else // Assumed to be a medium asteroid
+            {
+                babyAsteroid1 = new SmallAsteroid();
+                babyAsteroid2 = new SmallAsteroid();
+            }
+
+
+            babyAsteroid1.Position = parentAsteroid.Position;
+            Vector2 baby1Dir = new Vector2(parentAsteroid.Direction.X - 0.2f, parentAsteroid.Direction.Y - 0.2f);
+            babyAsteroid1.Direction = baby1Dir;
+            babyAsteroid1.Speed = parentAsteroid.Speed + 0.2f;
+            _asteroids.Add(babyAsteroid1);
+
+            babyAsteroid2.Position = parentAsteroid.Position;
+            Vector2 baby2Dir = new Vector2(parentAsteroid.Direction.X + 0.2f, parentAsteroid.Direction.Y + 0.2f);
+            babyAsteroid2.Direction = baby2Dir;
+            babyAsteroid2.Speed = parentAsteroid.Speed * 0.2f;
+            _asteroids.Add(babyAsteroid2);
+
         }
 
         public void DrawAsteroids(SpriteBatch spriteBatch)

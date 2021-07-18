@@ -58,6 +58,8 @@ namespace Asteroids
             _laserSprite = Content.Load<Texture2D>("laser");
 
             AsteroidSprites.LargeAsteroidSprite = Content.Load<Texture2D>("asteroidlarge");
+            AsteroidSprites.MediumAsteroidSprite = Content.Load<Texture2D>("asteroidmedium");
+            AsteroidSprites.SmallAsteroidSprite = Content.Load<Texture2D>("asteroidsmall");
         }
 
         protected override void Update(GameTime gameTime)
