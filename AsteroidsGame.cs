@@ -38,9 +38,6 @@ namespace Asteroids
         public AsteroidsGame()
         {
             _graphics = new GraphicsDeviceManager(this);
-
-
-
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
@@ -51,7 +48,6 @@ namespace Asteroids
             _graphics.PreferredBackBufferWidth = SCREEN_WIDTH;
             _graphics.PreferredBackBufferHeight = SCREEN_HEIGHT;
             _graphics.ApplyChanges();
-
 
             _player = new Player();
             _lasers = new List<Laser>();
@@ -150,7 +146,6 @@ namespace Asteroids
                 return;
 
             // if we made it this far it's all good to go
-
             var newLaser = new Laser(_laserSprite, _player.Position, _player.Rotation);
             _lasers.Add(newLaser);
             _timeSinceLastLaserFire = 0f;
@@ -160,10 +155,7 @@ namespace Asteroids
         {
             GraphicsDevice.Clear(Color.Black);
 
-            // TODO: Add your drawing code here
             _spriteBatch.Begin();
-
-
 
             // Draw lives
             for (int i = Lives - 1; i >= 0; i--)
@@ -183,8 +175,6 @@ namespace Asteroids
             if (Lives == 0)
             {
                 //Backdrop box
-                
-
                 string scoreText = "Final Score: " + Score;
                 var textMeasurement = LargeFont.MeasureString(scoreText);
 
@@ -195,8 +185,6 @@ namespace Asteroids
             {
                 _spriteBatch.DrawString(MediumFont, "Score: " + Score.ToString(), new Vector2(25, 25), Color.MonoGameOrange);
             }
-
-
 
             base.Draw(gameTime);
             _spriteBatch.End();
