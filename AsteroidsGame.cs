@@ -34,6 +34,8 @@ namespace Asteroids
         private const float LOST_LIFE_INVICINIBILITY_TIME = 1f;
         private float _timeSinceLostLife = 0f;
         private int _highestScore = 0;
+        private bool _drawPlayer = true;
+        private FixedTimer _playerDeathFlashTimer;
 
         public AsteroidsGame()
         {
@@ -66,6 +68,7 @@ namespace Asteroids
             _playerSprite = Content.Load<Texture2D>("playership");
             _player.Sprite = _playerSprite;
             _laserSprite = Content.Load<Texture2D>("laser");
+            _playerDeathFlashTimer = new FixedTimer(50, false);
 
             AsteroidSprites.LargeAsteroidSprite = Content.Load<Texture2D>("asteroidlarge");
             AsteroidSprites.MediumAsteroidSprite = Content.Load<Texture2D>("asteroidmedium");
@@ -108,6 +111,8 @@ namespace Asteroids
                 // Loop through Asteroids and check for player collision...
                 if (_timeSinceLostLife > LOST_LIFE_INVICINIBILITY_TIME)
                 {
+                    _drawPlayer = true;
+                    _playerDeathFlashTimer.Enabled = false;
                     for (int asteroidIndex = _asteroidManager.Asteroids.Count - 1; asteroidIndex >= 0; asteroidIndex--)
                     {
                         var asteroid = _asteroidManager.Asteroids[asteroidIndex];
@@ -124,6 +129,13 @@ namespace Asteroids
                             break;
                         }
                     }
+                }
+                else
+                {
+                    _playerDeathFlashTimer.Enabled = true;
+                    _playerDeathFlashTimer.Update(gameTime);
+
+                    if (_playerDeathFlashTimer.Tick) { _drawPlayer = !_drawPlayer; }
                 }
 
                 _asteroidManager.UpdateAsteroids(gameTime, _lasers);
@@ -170,7 +182,8 @@ namespace Asteroids
 
             _asteroidManager.DrawAsteroids(_spriteBatch);
 
-            _player.DrawPlayer(_spriteBatch);
+            if (_drawPlayer)
+                _player.DrawPlayer(_spriteBatch);
 
             if (Lives == 0)
             {
