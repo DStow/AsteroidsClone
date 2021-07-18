@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using Asteroids.Asteroids;
+using System;
 
 namespace Asteroids
 {
@@ -13,7 +14,7 @@ namespace Asteroids
         private Player _player;
         private Texture2D _laserSprite;
         private Texture2D _playerSprite;
-        private Texture2D _blackdropSprite;
+        private Texture2D _backdropSprite;
         private List<Laser> _lasers;
         private AsteroidManager _asteroidManager;
 
@@ -73,7 +74,7 @@ namespace Asteroids
             AsteroidSprites.LargeAsteroidSprite = Content.Load<Texture2D>("asteroidlarge");
             AsteroidSprites.MediumAsteroidSprite = Content.Load<Texture2D>("asteroidmedium");
             AsteroidSprites.SmallAsteroidSprite = Content.Load<Texture2D>("asteroidsmall");
-            _blackdropSprite = Content.Load<Texture2D>("backdrop");
+            _backdropSprite = Content.Load<Texture2D>("backdrop");
         }
 
         protected override void Update(GameTime gameTime)
@@ -182,11 +183,12 @@ namespace Asteroids
             if (Lives == 0)
             {
                 //Backdrop box
-                //_spriteBatch.Draw(_blackdropSprite, new Rectangle(25, 60, SCREEN_WIDTH - 50, SCREEN_HEIGHT - 85), Color.White);
+                
 
                 string scoreText = "Final Score: " + Score;
                 var textMeasurement = LargeFont.MeasureString(scoreText);
 
+                _spriteBatch.Draw(_backdropSprite, new Rectangle(Convert.ToInt32((SCREEN_WIDTH / 2) - (textMeasurement.X / 2)) - 15, 185, Convert.ToInt32(textMeasurement.X) + 30, Convert.ToInt32(textMeasurement.Y) + 20), Color.White);
                 _spriteBatch.DrawString(LargeFont, scoreText, new Vector2((SCREEN_WIDTH / 2) - (textMeasurement.X / 2), 200), Color.MonoGameOrange);
             }
             else
