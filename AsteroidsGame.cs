@@ -54,6 +54,8 @@ namespace Asteroids
             MediumFont = Content.Load<SpriteFont>("fontmedium");
             _player.Sprite = Content.Load<Texture2D>("playership");
             _laserSprite = Content.Load<Texture2D>("laser");
+
+            AsteroidSprites.LargeAsteroidSprite = Content.Load<Texture2D>("asteroidlarge");
         }
 
         protected override void Update(GameTime gameTime)

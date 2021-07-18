@@ -30,29 +30,7 @@ namespace Asteroids
 
         public void UpdateLaser(GameTime gameTime)
         {
-            float xPos = Position.X, yPos = Position.Y;
-            xPos += Direction.X * SPEED * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            yPos += Direction.Y * SPEED * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (xPos < 0 - Size.X - 1f)
-            {
-                xPos = AsteroidsGame.SCREEN_WIDTH + Size.X;
-            }
-            else if (xPos > AsteroidsGame.SCREEN_WIDTH + Size.X + 1f)
-            {
-                xPos = 0 - Size.X;
-            }
-
-            if (yPos < 0 - Size.Y - 1f)
-            {
-                yPos = AsteroidsGame.SCREEN_WIDTH + Size.Y;
-            }
-            else if (yPos > AsteroidsGame.SCREEN_WIDTH + Size.Y + 1f)
-            {
-                yPos = 0 - Size.Y;
-            }
-
-            Position = new Vector2(xPos, yPos);
+            Position = MovementHelper.MoveObjectInDirectionWithScreenWrap(gameTime, Position, Direction, Size, SPEED);
 
             Lifespan += (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
