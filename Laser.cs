@@ -37,7 +37,7 @@ namespace Asteroids
 
         public void DrawLaser(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(LaserSprite, Position, null, Color.White, Rotation, new Vector2(Size.X / 2, Size.Y / 2), 1f, SpriteEffects.None, 1f);
+            spriteBatch.Draw(LaserSprite, Position, null, Color.MonoGameOrange, Rotation, new Vector2(Size.X / 2, Size.Y / 2), 1f, SpriteEffects.None, 1f);
         }
     }
 }

@@ -12,7 +12,7 @@ namespace Asteroids.Asteroids
         public Vector2 Size { get; private set; }
         public Vector2 Position { get; set; }
         public Vector2 Direction { get; set; }
-        public float Speed { get; set; } = 100f;
+        public float Speed { get; set; } = 200f;
 
         public AsteroidBase()
         {

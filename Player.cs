@@ -108,7 +108,7 @@ namespace Asteroids
 
         public void DrawPlayer(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Sprite, Position, null, Color.White, Rotation, new Vector2(Size.X / 2, Size.Y / 2), 1f, SpriteEffects.None, 1f);
+            spriteBatch.Draw(Sprite, Position, null, Color.MonoGameOrange, Rotation, new Vector2(Size.X / 2, Size.Y / 2), 1f, SpriteEffects.None, 1f);
 
             DrawingHelper.DrawGhostIfNeeded(spriteBatch, Sprite, Position, Size, Rotation);
         }

@@ -12,6 +12,7 @@ namespace Asteroids
         private SpriteBatch _spriteBatch;
         private Player _player;
         private Texture2D _laserSprite;
+        private Texture2D _playerSprite;
         private List<Laser> _lasers;
         private AsteroidManager _asteroidManager;
 
@@ -22,8 +23,11 @@ namespace Asteroids
 
         private const float RELOAD_SPEED = 0.1f;
         private float _timeSinceLastLaserFire = 0f;
+        private bool _spaceDown = false;
         private const int MAX_LASERS = 5;
         private const float LASER_LIFETIME = 2;
+        public static int Score = 0;
+        public static int Lives = 5;
 
         public AsteroidsGame()
         {
@@ -54,7 +58,8 @@ namespace Asteroids
 
             // TODO: use this.Content to load your game content here
             MediumFont = Content.Load<SpriteFont>("fontmedium");
-            _player.Sprite = Content.Load<Texture2D>("playership");
+            _playerSprite = Content.Load<Texture2D>("playership");
+            _player.Sprite = _playerSprite;
             _laserSprite = Content.Load<Texture2D>("laser");
 
             AsteroidSprites.LargeAsteroidSprite = Content.Load<Texture2D>("asteroidlarge");
@@ -73,9 +78,14 @@ namespace Asteroids
             _player.UpdatePlayer(gameTime);
 
             KeyboardState keyboardState = Keyboard.GetState();
-            if (keyboardState.IsKeyDown(Keys.Space))
+            if (keyboardState.IsKeyDown(Keys.Space) && _spaceDown == false)
             {
+                _spaceDown = true;
                 AttemptToFireLaser(gameTime);
+            }
+            else if (keyboardState.IsKeyDown(Keys.Space) == false)
+            {
+                _spaceDown = false;
             }
 
             for (int i = _lasers.Count - 1; i >= 0; i--)
@@ -115,7 +125,16 @@ namespace Asteroids
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
 
-           
+            _spriteBatch.DrawString(MediumFont, "Score: " + Score.ToString(), new Vector2(25, 25), Color.MonoGameOrange);
+
+            // Draw lives
+            for (int i = Lives - 1; i >= 0; i--)
+            {
+                _spriteBatch.Draw(_playerSprite, new Vector2(SCREEN_WIDTH - ((25 - 5) * (i + 1)), 25), null, Color.White, (float)(System.Math.PI / 2) * 3, Vector2.Zero, 0.65f, SpriteEffects.None, 0f);
+            }
+
+
+
 
             foreach (var laser in _lasers)
             {

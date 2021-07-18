@@ -66,7 +66,7 @@ namespace Asteroids.Asteroids
         private void SpawnAsteroidWave()
         {
             // for now we will just spawn 4 larger asteroids per wave...
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 4 + Wave; i++)
             {
                 // We need random X, Y and Velocity
                 float xPos, yPos, xDir, yDir;
@@ -102,13 +102,13 @@ namespace Asteroids.Asteroids
             babyAsteroid1.Position = parentAsteroid.Position;
             Vector2 baby1Dir = new Vector2(parentAsteroid.Direction.X - 0.2f, parentAsteroid.Direction.Y - 0.2f);
             babyAsteroid1.Direction = baby1Dir;
-            babyAsteroid1.Speed = parentAsteroid.Speed + 0.2f;
+            babyAsteroid1.Speed = parentAsteroid.Speed + 1.2f;
             _asteroids.Add(babyAsteroid1);
 
             babyAsteroid2.Position = parentAsteroid.Position;
             Vector2 baby2Dir = new Vector2(parentAsteroid.Direction.X + 0.2f, parentAsteroid.Direction.Y + 0.2f);
             babyAsteroid2.Direction = baby2Dir;
-            babyAsteroid2.Speed = parentAsteroid.Speed * 0.2f;
+            babyAsteroid2.Speed = parentAsteroid.Speed * 1.2f;
             _asteroids.Add(babyAsteroid2);
 
         }
