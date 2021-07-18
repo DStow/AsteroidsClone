@@ -103,34 +103,14 @@ namespace Asteroids
 
         private void UpdatePlayerPosition(GameTime gameTime, KeyboardState keyboardState)
         {
-            float xPos = Position.X, yPos = Position.Y;
-            xPos += Velocity.X * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            yPos += Velocity.Y * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (xPos < 0 - Size.X - 1f)
-            {
-                xPos = AsteroidsGame.SCREEN_WIDTH + Size.X;
-            }
-            else if (xPos > AsteroidsGame.SCREEN_WIDTH + Size.X + 1f)
-            {
-                xPos = 0 - Size.X;
-            }
-
-            if (yPos < 0 - Size.Y - 1f)
-            {
-                yPos = AsteroidsGame.SCREEN_WIDTH + Size.Y;
-            }
-            else if (yPos > AsteroidsGame.SCREEN_WIDTH + Size.Y + 1f)
-            {
-                yPos = 0 - Size.Y;
-            }
-
-            Position = new Vector2(xPos, yPos);
+            
         }
 
         public void DrawPlayer(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(Sprite, Position, null, Color.White, Rotation, new Vector2(Size.X / 2, Size.Y / 2), 1f, SpriteEffects.None, 1f);
+
+            DrawingHelper.DrawGhostIfNeeded(spriteBatch, Sprite, Position, Size, Rotation);
         }
     
         public Vector2 GetNormalizedDirection()

@@ -27,6 +27,8 @@ namespace Asteroids.Asteroids
         public void DrawAsteroid(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(GetAsteroidSprite(), Position, null, Color.White, Rotation, new Vector2(Size.X / 2, Size.Y / 2), 1f, SpriteEffects.None, 1f);
+
+            DrawingHelper.DrawGhostIfNeeded(spriteBatch, GetAsteroidSprite(), Position, Size, Rotation);
         }
 
         protected abstract Texture2D GetAsteroidSprite();

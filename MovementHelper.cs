@@ -9,26 +9,32 @@ namespace Asteroids
     {
         public static Vector2 MoveObjectInDirectionWithScreenWrap(GameTime gameTime, Vector2 position, Vector2 direction, Vector2 size, float speed)
         {
+            var velocity = new Vector2(direction.X * speed, direction.Y * speed);
+            return MoveObjectInVelocityWithScreenWrap(gameTime, position, velocity, size, speed);
+        }
+
+        public static Vector2 MoveObjectInVelocityWithScreenWrap(GameTime gameTime, Vector2 position, Vector2 velocity, Vector2 size, float speed)
+        {
             float xPos = position.X, yPos = position.Y;
-            xPos += direction.X * speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            yPos += direction.Y * speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            xPos += velocity.X * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            yPos += velocity.Y * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (xPos < 0 - size.X - 1f)
+            if (xPos < 0 - (size.X / 2))
             {
-                xPos = AsteroidsGame.SCREEN_WIDTH + size.X;
+                xPos = AsteroidsGame.SCREEN_WIDTH - (size.X / 2);
             }
-            else if (xPos > AsteroidsGame.SCREEN_WIDTH + size.X + 1f)
+            else if (xPos > AsteroidsGame.SCREEN_WIDTH + (size.X / 2))
             {
-                xPos = 0 - size.X;
+                xPos = 0 + (size.X / 2);
             }
 
-            if (yPos < 0 - size.Y - 1f)
+            if (yPos < 0 - (size.Y / 2))
             {
-                yPos = AsteroidsGame.SCREEN_WIDTH + size.Y;
+                yPos = AsteroidsGame.SCREEN_HEIGHT - (size.Y / 2);
             }
-            else if (yPos > AsteroidsGame.SCREEN_WIDTH + size.Y + 1f)
+            else if (yPos > AsteroidsGame.SCREEN_HEIGHT + (size.Y / 2))
             {
-                yPos = 0 - size.Y;
+                yPos = 0 + (size.Y / 2);
             }
 
             return new Vector2(xPos, yPos);
