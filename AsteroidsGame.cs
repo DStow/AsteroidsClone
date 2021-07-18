@@ -20,10 +20,10 @@ namespace Asteroids
         public const int SCREEN_WIDTH = 600;
         public const int SCREEN_HEIGHT = 600;
 
-        private const float RELOAD_SPEED = 1f;
+        private const float RELOAD_SPEED = 0.1f;
         private float _timeSinceLastLaserFire = 0f;
         private const int MAX_LASERS = 5;
-        private const float LASER_LIFETIME = 6;
+        private const float LASER_LIFETIME = 2;
 
         public AsteroidsGame()
         {
@@ -113,7 +113,7 @@ namespace Asteroids
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
 
-            _player.DrawPlayer(_spriteBatch);
+           
 
             foreach (var laser in _lasers)
             {
@@ -121,6 +121,8 @@ namespace Asteroids
             }
 
             _asteroidManager.DrawAsteroids(_spriteBatch);
+
+            _player.DrawPlayer(_spriteBatch);
 
             // Write out hte player velocity for debugging
             _spriteBatch.DrawString(MediumFont, "Velocity: " + _player.Velocity.ToString() + "\nRotation: " + _player.Rotation.ToString("N2"), new Vector2(25, 25), Color.MonoGameOrange);
