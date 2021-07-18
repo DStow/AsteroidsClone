@@ -10,8 +10,8 @@ namespace Asteroids.Asteroids
     {
         public float Rotation { get; set; }
         public Vector2 Size { get; private set; }
-        public Vector2 Position { get; private set; }
-        public Vector2 Direction { get; private set; }
+        public Vector2 Position { get; set; }
+        public Vector2 Direction { get; set; }
         public float Speed { get; set; } = 100f;
 
         public AsteroidBase()
