@@ -15,6 +15,8 @@ namespace Asteroids
         private const float ROTATE_SPEED = 8;
         private const float MAX_SPEED = 20;
         private const float SPEED_DECAY = 20f;
+        private const float ACCELERATION = 200f;
+        private const float DEACCELERATION = 220f;
 
         public void UpdatePlayer(GameTime gameTime)
         {
@@ -48,45 +50,49 @@ namespace Asteroids
                 // Get velocity figures?
                 float xVel = Velocity.X, yVel = Velocity.Y;
 
-                xVel += (float)System.Math.Cos(Rotation);
-                yVel += (float)System.Math.Sin(Rotation);
+                xVel += (float)System.Math.Cos(Rotation) * ACCELERATION * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                yVel += (float)System.Math.Sin(Rotation) * ACCELERATION * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
                 Velocity = new Vector2(xVel, yVel);
-                Velocity.Normalize();
-
-                // if (System.Math.Abs(xVel + yVel) <= MAX_SPEED)
-                // {
-                //     Velocity = new Vector2(xVel, yVel);
-                //     Velocity.Normalize();
-                // }
             }
             else
             {
-                // Decay the velocity
-                // float xVel = Velocity.X, yVel = Velocity.Y;
-                // if (xVel < 0)
-                //     if (System.Math.Abs(xVel) < SPEED_DECAY)
-                //         xVel = 0;
-                //     else
-                //         xVel += SPEED_DECAY * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                // else if (xVel > 0)
-                //     if (xVel < SPEED_DECAY)
-                //         xVel = 0;
-                //     else
-                //         xVel -= SPEED_DECAY * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                float xVel = Velocity.X, yVel = Velocity.Y;
+                // Normalize the current velocity vector
+                Vector2 playerDir = new Vector2(Velocity.X, Velocity.Y);
+                playerDir.Normalize();
 
-                // if (yVel < 0)
-                //     if (System.Math.Abs(yVel) < SPEED_DECAY)
-                //         yVel = 0;
-                //     else
-                //         yVel += SPEED_DECAY * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                // else if (yVel > 0)
-                //     if (yVel < SPEED_DECAY)
-                //         yVel = 0;
-                //     else
-                //         yVel -= SPEED_DECAY * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                // Use the player Dir as a way to fraction out how much deaccelleration to apply
 
-                // Velocity = new Vector2(xVel, yVel);
+                // X Axis Decceleration
+                if (System.Math.Abs(xVel) > 0)
+                {
+                    float xDeaccelAmount = playerDir.X * DEACCELERATION * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    if(System.Math.Abs(xDeaccelAmount) > System.Math.Abs(xVel))
+                    {
+                        xVel = 0;
+                    }
+                    else
+                    {
+                        xVel -= xDeaccelAmount;
+                    }
+                }
+
+                // Y Axis Decceleration
+                if (System.Math.Abs(yVel) > 0)
+                {
+                    float yDeaccelAmount = playerDir.Y * DEACCELERATION * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    if(System.Math.Abs(yDeaccelAmount) > System.Math.Abs(yVel))
+                    {
+                        yVel = 0;
+                    }
+                    else
+                    {
+                        yVel -= yDeaccelAmount;
+                    }
+                }
+
+                Velocity = new Vector2(xVel, yVel);
             }
         }
 
