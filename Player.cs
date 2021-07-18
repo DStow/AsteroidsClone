@@ -16,22 +16,33 @@ namespace Asteroids
         private const float MAX_SPEED = 20;
         private const float SPEED_DECAY = 20f;
 
-
         public void UpdatePlayer(GameTime gameTime)
         {
-            var ks = Keyboard.GetState();
+            var keyboardState = Keyboard.GetState();
 
-            if (ks.IsKeyDown(Keys.A))
+            UpdatePlayerRotation(gameTime, keyboardState);
+
+            UpdatePlayerAcceleration(gameTime, keyboardState);
+
+            UpdatePlayerPosition(gameTime, keyboardState);
+        }
+
+        private void UpdatePlayerRotation(GameTime gameTime, KeyboardState keyboardState)
+        {
+            if (keyboardState.IsKeyDown(Keys.A))
             {
                 Rotation -= ROTATE_SPEED * (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
 
-            if (ks.IsKeyDown(Keys.D))
+            if (keyboardState.IsKeyDown(Keys.D))
             {
                 Rotation += ROTATE_SPEED * (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
+        }
 
-            if (ks.IsKeyDown(Keys.W))
+        private void UpdatePlayerAcceleration(GameTime gameTime, KeyboardState keyboardState)
+        {
+            if (keyboardState.IsKeyDown(Keys.W))
             {
                 // Update velocity
                 // Get velocity figures?
@@ -77,7 +88,10 @@ namespace Asteroids
 
                 // Velocity = new Vector2(xVel, yVel);
             }
+        }
 
+        private void UpdatePlayerPosition(GameTime gameTime, KeyboardState keyboardState)
+        {
             float xPos = Position.X, yPos = Position.Y;
             xPos += Velocity.X * (float)gameTime.ElapsedGameTime.TotalSeconds;
             yPos += Velocity.Y * (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -101,8 +115,6 @@ namespace Asteroids
             }
 
             Position = new Vector2(xPos, yPos);
-
-
         }
 
         public void DrawPlayer(SpriteBatch spriteBatch)
