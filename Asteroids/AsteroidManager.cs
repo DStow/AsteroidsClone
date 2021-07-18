@@ -9,27 +9,27 @@ namespace Asteroids.Asteroids
     public class AsteroidManager
     {
         public int Wave { get; private set; } = 0;
-        private List<AsteroidBase> _asteroids;
+        public List<AsteroidBase> Asteroids;
         private Random _random;
 
         public AsteroidManager()
         {
-            _asteroids = new List<AsteroidBase>();
+            Asteroids = new List<AsteroidBase>();
             _random = new Random();
         }
 
         public void UpdateAsteroids(GameTime gameTime, List<Laser> lasers)
         {
-            if (_asteroids.Count == 0)
+            if (Asteroids.Count == 0)
             {
                 // Wave has ended hurrah
                 Wave++;
                 SpawnAsteroidWave();
             }
 
-            for (int i = _asteroids.Count - 1; i >= 0; i--)
+            for (int i = Asteroids.Count - 1; i >= 0; i--)
             {
-                _asteroids[i].UpdateAsteroid(gameTime);
+                Asteroids[i].UpdateAsteroid(gameTime);
             }
 
             HandleLaserCollisions(lasers);
@@ -41,19 +41,19 @@ namespace Asteroids.Asteroids
             for (int laserIndex = lasers.Count - 1; laserIndex >= 0; laserIndex--)
             {
                 var laser = lasers[laserIndex];
-                for (int asteroidIndex = _asteroids.Count - 1; asteroidIndex >= 0; asteroidIndex--)
+                for (int asteroidIndex = Asteroids.Count - 1; asteroidIndex >= 0; asteroidIndex--)
                 {
-                    var asteroid = _asteroids[asteroidIndex];
+                    var asteroid = Asteroids[asteroidIndex];
                     if (CollisionHelper.CheckBasicCollision(laser.Position, laser.Size, asteroid.Position, asteroid.Size))
                     {
                         if (asteroid is SmallAsteroid)
                         {
-                            _asteroids.RemoveAt(asteroidIndex);
+                            Asteroids.RemoveAt(asteroidIndex);
                         }
                         else
                         {
                             PopAsteroid(asteroid);
-                            _asteroids.RemoveAt(asteroidIndex);
+                            Asteroids.RemoveAt(asteroidIndex);
                         }
 
                         lasers.RemoveAt(laserIndex);
@@ -79,11 +79,11 @@ namespace Asteroids.Asteroids
                 newAsteroid.Position = new Vector2(xPos, yPos);
                 newAsteroid.Direction = new Vector2(xDir, yDir);
 
-                _asteroids.Add(newAsteroid);
+                Asteroids.Add(newAsteroid);
             }
         }
 
-        private void PopAsteroid(AsteroidBase parentAsteroid)
+        public void PopAsteroid(AsteroidBase parentAsteroid)
         {
             AsteroidBase babyAsteroid1, babyAsteroid2;
 
@@ -103,19 +103,19 @@ namespace Asteroids.Asteroids
             Vector2 baby1Dir = new Vector2(parentAsteroid.Direction.X - 0.2f, parentAsteroid.Direction.Y - 0.2f);
             babyAsteroid1.Direction = baby1Dir;
             babyAsteroid1.Speed = parentAsteroid.Speed + 1.2f;
-            _asteroids.Add(babyAsteroid1);
+            Asteroids.Add(babyAsteroid1);
 
             babyAsteroid2.Position = parentAsteroid.Position;
             Vector2 baby2Dir = new Vector2(parentAsteroid.Direction.X + 0.2f, parentAsteroid.Direction.Y + 0.2f);
             babyAsteroid2.Direction = baby2Dir;
             babyAsteroid2.Speed = parentAsteroid.Speed * 1.2f;
-            _asteroids.Add(babyAsteroid2);
+            Asteroids.Add(babyAsteroid2);
 
         }
 
         public void DrawAsteroids(SpriteBatch spriteBatch)
         {
-            foreach (var asteroid in _asteroids)
+            foreach (var asteroid in Asteroids)
             {
                 asteroid.DrawAsteroid(spriteBatch);
             }

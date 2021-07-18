@@ -28,6 +28,8 @@ namespace Asteroids
         private const float LASER_LIFETIME = 2;
         public static int Score = 0;
         public static int Lives = 5;
+        private const float LOST_LIFE_INVICINIBILITY_TIME = 1f;
+        private float _timeSinceLostLife = 0f;
 
         public AsteroidsGame()
         {
@@ -76,6 +78,7 @@ namespace Asteroids
             _timeSinceLastLaserFire += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             _player.UpdatePlayer(gameTime);
+            _timeSinceLostLife += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             KeyboardState keyboardState = Keyboard.GetState();
             if (keyboardState.IsKeyDown(Keys.Space) && _spaceDown == false)
@@ -94,6 +97,27 @@ namespace Asteroids
 
                 if (_lasers[i].Lifespan > LASER_LIFETIME)
                     _lasers.RemoveAt(i);
+            }
+
+            // Loop through Asteroids and check for player collision...
+            if (_timeSinceLostLife > LOST_LIFE_INVICINIBILITY_TIME)
+            {
+                for (int asteroidIndex = _asteroidManager.Asteroids.Count - 1; asteroidIndex >= 0; asteroidIndex--)
+                {
+                    var asteroid = _asteroidManager.Asteroids[asteroidIndex];
+                    if (CollisionHelper.CheckBasicCollision(_player.Position, _player.Size, asteroid.Position, asteroid.Size))
+                    {
+                        Lives--;
+                        _timeSinceLostLife = 0;
+
+                        if (!(asteroid is SmallAsteroid))
+                            _asteroidManager.PopAsteroid(asteroid);
+
+                        _asteroidManager.Asteroids.RemoveAt(asteroidIndex);
+
+                        break;
+                    }
+                }
             }
 
             _asteroidManager.UpdateAsteroids(gameTime, _lasers);
