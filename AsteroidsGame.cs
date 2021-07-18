@@ -184,10 +184,10 @@ namespace Asteroids
                 //Backdrop box
                 //_spriteBatch.Draw(_blackdropSprite, new Rectangle(25, 60, SCREEN_WIDTH - 50, SCREEN_HEIGHT - 85), Color.White);
 
-                string scoreText = "GAMEOVER\nFinal Score: " + Score;
+                string scoreText = "Final Score: " + Score;
                 var textMeasurement = LargeFont.MeasureString(scoreText);
 
-                _spriteBatch.DrawString(LargeFont, scoreText, new Vector2((SCREEN_WIDTH / 2) - (textMeasurement.X / 2), 200), Color.Yellow);
+                _spriteBatch.DrawString(LargeFont, scoreText, new Vector2((SCREEN_WIDTH / 2) - (textMeasurement.X / 2), 200), Color.MonoGameOrange);
             }
             else
             {
