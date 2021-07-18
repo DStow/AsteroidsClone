@@ -48,10 +48,18 @@ namespace Asteroids.Asteroids
                     {
                         if (asteroid is SmallAsteroid)
                         {
+                            AsteroidsGame.Score += 30;
                             Asteroids.RemoveAt(asteroidIndex);
                         }
-                        else
+                        else if (asteroid is MediumAsteroid)
                         {
+                            AsteroidsGame.Score += 20;
+                            PopAsteroid(asteroid);
+                            Asteroids.RemoveAt(asteroidIndex);
+                        }
+                        else if (asteroid is LargeAsteroid)
+                        {
+                            AsteroidsGame.Score += 10;
                             PopAsteroid(asteroid);
                             Asteroids.RemoveAt(asteroidIndex);
                         }
