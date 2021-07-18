@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using Asteroids.Asteroids;
 
 namespace Asteroids
 {
@@ -12,6 +13,7 @@ namespace Asteroids
         private Player _player;
         private Texture2D _laserSprite;
         private List<Laser> _lasers;
+        private AsteroidManager _asteroidManager;
 
         public static SpriteFont MediumFont;
 
@@ -40,8 +42,8 @@ namespace Asteroids
             _graphics.ApplyChanges();
 
             _player = new Player();
-
             _lasers = new List<Laser>();
+            _asteroidManager = new AsteroidManager();
 
             base.Initialize();
         }
@@ -82,6 +84,8 @@ namespace Asteroids
                     _lasers.RemoveAt(i);
             }
 
+            _asteroidManager.UpdateAsteroids(gameTime, _lasers);
+
             base.Update(gameTime);
         }
 
@@ -115,6 +119,8 @@ namespace Asteroids
             {
                 laser.DrawLaser(_spriteBatch);
             }
+
+            _asteroidManager.DrawAsteroids(_spriteBatch);
 
             // Write out hte player velocity for debugging
             _spriteBatch.DrawString(MediumFont, "Velocity: " + _player.Velocity.ToString() + "\nRotation: " + _player.Rotation.ToString("N2"), new Vector2(25, 25), Color.MonoGameOrange);
